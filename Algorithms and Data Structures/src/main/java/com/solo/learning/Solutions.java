@@ -1,7 +1,7 @@
 package com.solo.learning;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Methods providing my own solutions for coding exercises found on HackerRank, LeetCode and the
@@ -9,8 +9,6 @@ import java.util.*;
  *
  * @author tiberiusdourado
  */
-
-
 @Slf4j
 public class Solutions {
 
@@ -130,13 +128,13 @@ public class Solutions {
   }
 
   /**
-   * This is the "real" anagram checker without using easy methods from the Arrays class. Basically, it stores a value of how many times a character appears in the "count"
-   *    * array; incrementing it if it appears in a, and decrementing if it also appears in b. The end
-   *    * result (if we're actually dealing with an anagram is an array filled with zeroes. Otherwise,
-   *    * any number different from that indicates it's not an anagram. Works only
-   * if our constraints limit the input to ASCII characters (a-z,A-Z,0-9...), otherwise the count array would be too
-   * large, and we likely would lack memory to execute this if we had to store, say, Unicode
-   * strings.
+   * This is the "real" anagram checker without using easy methods from the Arrays class. Basically,
+   * it stores a value of how many times a character appears in the "count" * array; incrementing it
+   * if it appears in a, and decrementing if it also appears in b. The end * result (if we're
+   * actually dealing with an anagram is an array filled with zeroes. Otherwise, * any number
+   * different from that indicates it's not an anagram. Works only if our constraints limit the
+   * input to ASCII characters (a-z,A-Z,0-9...), otherwise the count array would be too large, and
+   * we likely would lack memory to execute this if we had to store, say, Unicode strings.
    *
    * @param a The first potential anagram to be checked.
    * @param b The second potential anagram to be checked.
@@ -162,13 +160,13 @@ public class Solutions {
     return true;
   }
 
-  static String[] tokenSeparator(String text){
+  static String[] tokenSeparator(String text) {
     log.info("Initializing TokenSeparator. \nReceived text: {}", text);
     text = text.trim().replaceAll("[!,?._'@]", " ");
     text = text.replaceAll("(\\s)+", " ");
 
-    if (text.trim().equalsIgnoreCase("")){
-      return new String[]{"0"};
+    if (text.trim().equalsIgnoreCase("")) {
+      return new String[] {"0"};
     }
     String[] splitString = text.split(" ");
 
@@ -179,5 +177,122 @@ public class Solutions {
 
     return splitString;
   }
-}
 
+  /**
+   * Checks a 6x6 2D array (arr) containing integers where arr[x][y->y+2], arr[x+1][y+2] and
+   * arr[x+2][y->y+2] form an "hourglass" pattern. Determines the sum of all hourglasses in the 6x6
+   * array, then prints out the value of the highest sum.
+   *
+   * @param arr A 6x6 2D array (or rather, a List of Lists).
+   * @return The sum of the highest values found in an hourglass pattern.
+   */
+  public static int hourglassSum(List<List<Integer>> arr) {
+    int highest = Integer.MIN_VALUE;
+    for (int j = 0; j < 4; j++) {
+      for (int i = 0; i < 4; i++) {
+        // There are 16 possible hourglasses; 4 lines of 4.
+        int sum = 0;
+        sum += arr.get(j).get(i);
+        sum += arr.get(j).get(i + 1);
+        sum += arr.get(j).get(i + 2);
+        sum += arr.get(j + 1).get(i + 1);
+        sum += arr.get(j + 2).get(i);
+        sum += arr.get(j + 2).get(i + 1);
+        sum += arr.get(j + 2).get(i + 2);
+        if (sum > highest) highest = sum;
+      }
+    }
+    return highest;
+  }
+
+  /**
+   * Performs a left-rotation on an array by "d" positions, i.e. shifts them to the left by a "d"
+   * amount of index positions.
+   *
+   * @param d The number of indexes to shuffle to the left.
+   * @param arr The Integer list to be rotated.
+   * @return The rotated/shifted list.
+   */
+  public static List<Integer> rotateLeft(int d, List<Integer> arr) {
+    int j = 0;
+    List<Integer> copy = new ArrayList<>();
+
+    for (Integer number : arr) {
+      copy.add(number.intValue());
+    }
+
+    for (int i = 0; i < arr.size(); i++) {
+      if (i + d >= arr.size()) {
+        arr.set(i, copy.get(j));
+        j++;
+      } else {
+        arr.set(i, copy.get(i + d));
+      }
+    }
+    return arr;
+  }
+
+  /**
+   * Takes in a List of Strings containing character sequences, and a "queries" list of Strings
+   * containing patterns to be checked. The method compares the entries in the "queries" list to
+   * each entry of "stringList" and if there is a match, it adds +1 to a counter. This is then added
+   * to a "results" list. Basically, finds how many times each element from the "queries" list is
+   * present in the "stringsList".
+   *
+   * @param stringList A list of strings containing random character sequences.
+   * @param queries A list of strings containing character sequences to be checked and counted from
+   *     stringsList.
+   * @return A list of how many times each element from the "queries" list can be found in
+   *     "stringList".
+   */
+  public static List<Integer> matchingStrings(List<String> stringList, List<String> queries) {
+    List<Integer> results = new ArrayList<>();
+    for (String query : queries) {
+      int count = 0;
+      for (int i = 0; i < stringList.size(); i++) {
+        if (stringList.get(i).equals(query)) {
+          count++;
+        }
+      }
+      results.add(count);
+    }
+    return results;
+  }
+
+  /**
+   * Using a 2D array of unknown size (which we'll call potato), this method generates an n-sized Long-type result List, which
+   * contains the results of certain operations defined in the potato. Each line of the potato contains 3 integer elements
+   * in the format "a b k", which describe an operation that will be repeated from indexes a to b
+   * (inclusive) on the result list. Which means that each of the indexes on the result list, from a to b, will have
+   * "k" added to them. Then we return the largest number from the result list. That's it. But
+   * apparently HackerRank doesn't know how to explain this without me having to read the page 10
+   * times. Or maybe I'm just dumb. Who knows?
+   *
+   * @param n The size of the result list.
+   * @param queries The operations to be executed on the result list, in format a b k (from indexes
+   *     a to b, add number k)
+   * @return A Long representing the highest number from the final result list.
+   */
+  public static long arrayManipulation(int n, List<List<Integer>> queries) {
+    List<Long> resultsList = new ArrayList<>();
+    Long highest = Long.MIN_VALUE;
+
+    for (int i = 0; i < n; i++) {
+      resultsList.add(0L);
+    }
+
+    for (List<Integer> list : queries) {
+      int a = list.get(0) - 1;
+      int b = list.get(1);
+      int k = list.get(2);
+
+      for (int i = a; i < b; i++) {
+        Long current = (Long.valueOf(k) + resultsList.get(i));
+        resultsList.set(i, current);
+        if (current > highest) highest = current;
+      }
+    }
+
+    return highest;
+  }
+}
